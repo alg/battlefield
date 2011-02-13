@@ -1,0 +1,47 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN">
+<html>
+  <head>
+    <title>Test</title>
+    <script src="/js/jquery.js" type="text/javascript" charset="utf-8"></script>
+    <script src="/js/link.js" type="text/javascript" charset="utf-8"></script>
+    <script src="/js/battlefield.js" type="text/javascript" charset="utf-8"></script>
+    <script src="/js/app.js" type="text/javascript" charset="utf-8"></script>
+    <style type="text/css" media="screen">
+      #battlefield {
+        background: #ccc;
+        overflow: hidden;
+        position: relative;
+      }
+
+      .tank {
+        position: absolute;
+        width: 52px;
+        height: 72px;
+        margin: -36px 0 0 -26px;
+        background: url(/images/body.png) 0 0 no-repeat;
+        overflow: hidden;
+      }
+      
+      .head {
+        position: relative;
+        width: 25px;
+        height: 36px;
+        left: 13px;
+        top: 18px;
+        background: url(/images/head.png) transparent 0 0 no-repeat;
+      }
+      
+      .bullet {
+        position: absolute;
+        width: 5px;
+        height: 5px;
+        margin: -2px 0 0 -2px;
+        background: url(/images/bullet.png) transparent 0 0 no-repeat;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="battlefield">
+    </div>
+  </body>
+</html>
