@@ -28,5 +28,4 @@ $(function() {
   bf   = new Battlefield('#battlefield', link);
   link.connect();
 //  setInterval(app.fireEvent, 1000);
-  ManualControl(app); 
 });
