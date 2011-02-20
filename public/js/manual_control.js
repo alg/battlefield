@@ -69,3 +69,7 @@ function ManualControl(app){
 
   $(document).click(function(){ control.fire() })
 }
+
+$(function() {
+  new ManualControl(app);
+})
