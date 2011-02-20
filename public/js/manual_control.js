@@ -72,4 +72,4 @@ function ManualControl(app){
 
 $(function() {
   new ManualControl(app);
-})
+});
