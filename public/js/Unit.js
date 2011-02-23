@@ -3,7 +3,10 @@ window.Unit = atom.Class({
 
 	position: new Point(0, 0),
 
-	maxEnergyRectWidth: 50,
+
+	energyShift: {x: 0, y: -30},
+	energyRectWidth: 50,
+	energyRectHeight: 4,
 
 	initialize: function (status) {
 		this.isPlayer = status.isPlayer;
@@ -49,32 +52,53 @@ window.Unit = atom.Class({
 		                     ['#f00', '#900'];
 	},
 
-	get energyRect() {
-		var maxWidth = this.maxEnergyRectWidth;
-		var rect = new Rectangle({
-			from: this.position.clone().move({ x: -maxWidth/2+.5, y : 25.5 }),
-			size: {
-				width: this.status.energy / 100 * maxWidth,
-				height: 5
-			}
-		});
-		rect.maxWidth = maxWidth;
-		rect.energy   = this.status.energy;
-		return rect;
+	_energyRect: null,
+	_energySprite: null,
+	get energySprite() {
+		var unit   = this,
+		    rect   = unit._energyRect,
+			width  = unit.energyRectWidth,
+			height = unit.energyRectHeight,
+			sprite = unit._energySprite,
+			energy = unit.status.energy;
+		if (!rect) {
+			rect = unit._energyRect = new Rectangle({
+				from:  new Point(0.5, 0.5),
+				size: [width-1, height-1]
+			});
+			rect.toMax = function () {
+				rect.width = width-1;
+				return rect;
+			};
+			rect.toEnergy = function () {
+				rect.width = (width-1) * unit.status.energy / 100;
+				return rect;
+			};
+		}
+		if (!sprite) {
+			sprite = unit._energySprite = LibCanvas.Buffer(width, height, true);
+		}
+		if (sprite.energy != energy) {
+			var color = this.energyColor;
+			sprite.ctx
+				.clearAll()
+				.fill(rect.toEnergy(), color[0])
+				.stroke(rect.toMax() , color[1])
+			sprite.energy = energy;
+		}
+		return sprite;
 	},
 
 	draw: function () {
-		var color = this.energyColor, energy = this.energyRect;
 		this.libcanvas.ctx
 			.drawImage({
 				image : this.animation.getSprite(),
 				center: this.position,
 				angle : this.status.angle + (90).degree()
 			})
-			.fill(energy, color[0]);
-
-		energy.width = energy.maxWidth;
-
-		this.libcanvas.ctx.stroke(energy, color[1]);
+			.drawImage({
+				image: this.energySprite,
+				center: this.position.clone().move(this.energyShift)
+			});
 	}
 });
