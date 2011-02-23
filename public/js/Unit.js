@@ -8,6 +8,7 @@ window.Unit = atom.Class({
 	},
 
 	setStatus: function (status) {
+		console.log('status');
 		this.status = status;
 		this.libcanvas.update();
 	},

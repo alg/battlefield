@@ -12,21 +12,21 @@ window.ManualControl = atom.Class({
 		atom(document).bind({
 			keydown: function (e) {
 				switch (kb.key(e)) {
-					case 'aup'   : control.moveForwards(); break;
-					case 'adown' : control.moveBack();     break;
-					case 'aleft' : control.turnLeft();     break;
-					case 'aright': control.turnRight();    break;
+					case 'w'   : control.moveForwards(); break;
+					case 's' : control.moveBack();     break;
+					case 'a' : control.turnLeft();     break;
+					case 'd': control.turnRight();    break;
 					case 'space' : control.fire();         break;
 				}
 			}.context(this),
 			keyup: function (e) {
 				switch (kb.key(e)) {
-					case 'aup'   :
-					case 'adown' :
+					case 'w'   :
+					case 's' :
 						control.stopMove();
 						break;
-					case 'aleft' :
-					case 'aright':
+					case 'a' :
+					case 'd':
 						control.stopTurn();
 						break;
 				}

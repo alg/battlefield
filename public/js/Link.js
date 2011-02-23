@@ -8,11 +8,18 @@ window.Link = atom.Class({
 
 		socket.onopen = function() {
 			this.fireEvent('connect');
+
+			console.log('connect');
+
+			socket.onmessage = function(message) {
+
+				console.log('message');
+
+				this.fireEvent('message', [JSON.parse(message.data)]);
+			}.context(this);
+			
 		}.context(this);
 
-		socket.onmessage = function(message) {
-			this.fireEvent('message', [JSON.parse(message.data)]);
-		}.context(this);
 
 		this.socket = socket;
 	},
