@@ -1,16 +1,27 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN">
+<!DOCTYPE html>
 <html>
-  <head>
-    <title>Manual Control</title>
-    <link href="/stylesheets/battlefield.css" rel="stylesheet" type="text/css"/>
-    <script src="/js/jquery.js" type="text/javascript" charset="utf-8"></script>
-    <script src="/js/link.js" type="text/javascript" charset="utf-8"></script>
-    <script src="/js/battlefield.js" type="text/javascript" charset="utf-8"></script>
-    <script src="/js/app.js" type="text/javascript" charset="utf-8"></script>
-    <script src="/js/manual_control.js" type="text/javascript" charset="utf-8"></script>
-  </head>
-  <body>
-    <div id="battlefield">
-    </div>
-  </body>
+	<head>
+		<meta charset="utf-8" />
+		<title>Manual Control</title>
+		<link rel="stylesheet" href="styles.css" />
+		<script src="/js/lib/atom.js" ></script>
+		<script src="/js/lib/libcanvas.js"></script>
+
+		<script src="/js/App.js"></script>
+		<script src="/js/Battlefield.js"></script>
+		<script src="/js/Bullet.js"></script>
+		<script src="/js/Link.js"></script>
+		<script src="/js/ManualControl.js"></script>
+		<script src="/js/Unit.js"></script>
+		<script>
+atom(function() {
+	new ManualControl(app);
+});
+		</script>
+	</head>
+	<body>
+		<div id="battlefield">
+			<canvas></canvas>
+		</div>
+	</body>
 </html>
