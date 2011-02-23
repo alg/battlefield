@@ -1,10 +1,21 @@
 window.Battlefield = atom.Class({
 	initialize: function (element, link) {
 		this.libcanvas = new LibCanvas(element, {
+			fps: 20,
 			preloadImages: {
-				ship: '/images/ship-red.png'
+				enemy : '/images/ship-red.png',
+				player: '/images/ship-blue.png',
+				shot  : '/images/shot.png',
+				explosion: '/images/explosion.png',
+			},
+			preloadAudio: {
+				explosion : '/sounds/explosion.*',
 			}
-		}).start();
+		})
+		.addEvent('ready', function () {
+			this.getAudio('explosion').gatling(10);
+		})
+		.start();
 
 		link
 		.addEvent('connect', this.connect.context(this))
@@ -14,28 +25,76 @@ window.Battlefield = atom.Class({
 		atom.log('Battlefield connected');
 	},
 	message: function (json) {
-		this.actions[json.type].call(this, json);
+		if (json.type in this.actions) {
+			this.actions[json.type].call(this, json);
+		} else {
+			//throw new TypeError('No action «' + json.type + '» in Battlefield');
+			atom.log('No action «' + json.type + '» in Battlefield');
+		}
+	},
+
+	// astract
+	addElement: function (element, hash) {
+		this[hash][element.id] = element;
+		this.libcanvas.addElement(element);
+		return this;
+	},
+	updateElement: function (data, hash, Class) {
+		if (this[hash][data.id]) {
+			this[hash][data.id].setStatus(data);
+		} else {
+			this.addUnit(new Class(data));
+		}
+		return this;
+	},
+	rmElement: function (element, hash) {
+		delete this[hash][element.id];
+		element.die();
+		return this;
+	},
+	updateElementsSet: function (data, hash, suffix) {
+		var alive = {}, i;
+
+		for (i = data.length; i--;) if (data[i]) {
+			this['update' + suffix](data[i]);
+			alive[data[i].id] = true;
+		}
+
+		for (i in this[hash]) if (!alive[i]) {
+			this['rm' + suffix](this[hash][i]);
+		}
+
+		return this;
 	},
 
 	// units
 	units: {},
 	addUnit: function (unit) {
-		this.units[unit.id] = unit;
-		this.libcanvas.addElement(unit);
-		return this;
+		return this.addElement(unit, 'units');
 	},
 	updateUnit: function (data) {
-		if (this.units[data.id]) {
-			this.units[data.id].setStatus(data);
-		} else {
-			this.addUnit(new Unit(data));
-		}
-		return true;
+		return this.updateElement(data, 'units', Unit);
 	},
 	rmUnit: function (unit) {
-		delete this.units[unit.id];
-		this.libcanvas.rmElement(unit);
-		return this;
+		return this.rmElement(unit, 'units');
+	},
+	updateUnitsSet: function (units) {
+		return this.updateElementsSet(units, 'units', 'Unit');
+	},
+
+	// bullets
+	bullets: {},
+	addBullet: function (bullet) {
+		return this.addElement(bullet, 'bullets');
+	},
+	updateBullet: function (data) {
+		return this.updateElement(data, 'bullets', Bullet);
+	},
+	rmBullet: function (bullet) {
+		return this.rmElement(bullet, 'bullets');
+	},
+	updateBulletsSet: function (bullets) {
+		return this.updateElementsSet(bullets, 'bullets', 'Bullet');
 	},
 
 	// actions
@@ -49,50 +108,13 @@ window.Battlefield = atom.Class({
 		status: function (json) {
 			var status = json.data;
 
-			status.tanks.forEach(this.updateUnit.context(this));
-
-			// var bullets = status.bullets || [];
+			this.updateUnitsSet  (status.tanks   || []);
+			this.updateBulletsSet(status.bullets || []);
 		},
 		join: function (json) {
+			json.data.isPlayer = true;
 			this.updateUnit(json.data);
 		}
 	}
 
 });
-
-/*
-      var tanksStatus = status.tanks;
-      for (var i = tanksStatus.length - 1; i >= 0; i--) {
-        var t = tanksStatus[i];
-        var tank = self.tanks[t.id];
-        if (!tank) {
-          tank = new Tank(self.bf, t);
-          self.tanks[t.id] = tank;
-        } else {
-          tank.setStatus(t);
-        }
-      }
-
-      var bulletsStatus = status.bullets || [];
-      var seenBullets = [];
-      for (var i = bulletsStatus.length - 1; i >= 0; i--) {
-        var b = bulletsStatus[i];
-        var bullet = self.bullets[b.id];
-        if (!bullet) {
-          bullet = new Bullet(self.bf);
-          self.bullets[b.id] = bullet;
-        }
-        
-        seenBullets[b.id] = true;
-        bullet.setStatus(b);
-      }
-      
-      // remove gone bullets
-      for (var id in self.bullets) {
-        if (!seenBullets[id]) {
-          var bullet = self.bullets[id];
-          delete self.bullets[id];
-          bullet.remove();
-        }
-      }
-*/

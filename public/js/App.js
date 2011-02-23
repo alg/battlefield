@@ -8,7 +8,7 @@ window.App = atom.Class({
 				link.send('join');
 			})
 			.addEvent('message', function(json) {
-				atom.log('App link message', json);
+				// atom.log('App link message', json);
 			})
 	},
 

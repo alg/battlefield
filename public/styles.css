@@ -5,4 +5,5 @@ html {
 
 canvas {
 	border: 1px dashed #040;
+	background: url('/images/stars.jpg');
 }
