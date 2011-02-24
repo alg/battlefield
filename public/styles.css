@@ -1,0 +1,9 @@
+html {
+	background: #222;
+	color: #eee;
+}
+
+canvas {
+	border: 1px dashed #040;
+	background: url('/images/stars.jpg');
+}
