@@ -1,75 +1,69 @@
-function ManualControl(app){
-  var BTN_LEFT  = 65;
-  var BTN_UP    = 87;
-  var BTN_RIGHT = 68;
-  var BTN_DOWN  = 83;
-  var BTN_SPACE = 32;
-  this.command = { move: 0, turn: 0, fire: 0 }
+function ManualControl(app, link) {
+  var self = this;
+  
+  var BTN_LEFT  = 65; // A
+  var BTN_UP    = 87; // W
+  var BTN_RIGHT = 68; // D
+  var BTN_DOWN  = 83; // S
+  var BTN_SPACE = 32; // space
+  var BTN_Q     = 81;
+  var BTN_E     = 69;
+  
+  var commands = { move: 0, turn: 0, fire: 0 }
 
-  this.move_ahead = function(){
-    this.command.move = this.command.move < 0 ? 0 : 1;
-    app.command(this.command);
-  }
+  function moveAhead() { commands.move = 1; }
+  function moveBack()  { commands.move = -1; }
+  function stopMove()  { commands.move = 0; }
+  function turnLeft()  { commands.turn = -1; }
+  function turnRight() { commands.turn = 1; }
+  function stopTurn()  { commands.turn = 0; }
+  function fire()      { commands.fire = 1; }
 
-  this.move_back = function(){
-    this.command.move = this.commandmove > 0 ? 0 : -1;
-    app.command(this.command);
-  }
-
-  this.stop_move = function(){
-    this.command.move = 0
-    app.command(this.command)
-  }
-
-  this.stop_turn = function(){
-    this.command.turn = 0
-    app.command(this.command)
-  }
-
-  this.turn_left = function(){
-    this.command.turn = this.command.move < 0 ? 1 : -1;
-    app.command(this.command)
-  }
-
-  this.turn_right = function(){
-    this.command.turn = this.command.move >= 0 ? 1 : -1;
-    app.command(this.command)
-  }
-
-  this.fire = function(){
-    app.command({fire: 1})
-  }
-
-  var control = this;
-
-  $(document).keydown(function(event){
-    switch(event.which){
-      case BTN_UP:    control.move_ahead(); break;
-      case BTN_DOWN:  control.move_back(); break;
-      case BTN_LEFT:  control.turn_left(); break;
-      case BTN_RIGHT: control.turn_right(); break;
-      case BTN_SPACE: control.fire(); break;
+  $(document).keydown(function(event) {
+    switch(event.which) {
+      case BTN_UP:    moveAhead(); break;
+      case BTN_DOWN:  moveBack(); break;
+      case BTN_LEFT:  turnLeft(); break;
+      case BTN_RIGHT: turnRight(); break;
+      case BTN_SPACE: fire(); break;
+      case BTN_Q:     commands.turnGun = -1; break;
+      case BTN_E:     commands.turnGun = 1; break;
     }
-  })
-
-
-  $(document).keyup(function(event){
+  }).keyup(function(event){
     switch(event.which){
       case BTN_UP:    
       case BTN_DOWN:  
-        control.stop_move();
-      break;
+        stopMove();
+        break;
 
       case BTN_LEFT:
       case BTN_RIGHT: 
-        control.stop_turn(); 
-      break;
+        stopTurn(); 
+        break;
+      
+      case BTN_Q:
+      case BTN_E:
+        commands.turnGun = 0;
+        break;
     }
-  })
-
-  $(document).click(function(){ control.fire() })
+  }).click(function() { fire() });
+  
+  var wasIdle = nowIdle = false;
+  link.addMessageListener(function(json) {
+    var move = commands.move * 8,
+        turn = commands.turn * 10,
+        fire = commands.fire,
+        turnGun = commands.turnGun * 10;
+    
+    nowIdle = (move || turn || fire || turnGun) == 0;
+    
+    if (!nowIdle || !wasIdle) {
+      app.command({ move: move, turn: turn, fire: fire, turnGun: turnGun });
+      wasIdle = nowIdle;
+    }
+  });
 }
 
 $(function() {
-  new ManualControl(app);
+  new ManualControl(app, link);
 });

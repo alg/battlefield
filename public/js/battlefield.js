@@ -16,7 +16,7 @@ function Tank(field, status) {
       self.field.append(self.body);
     } else {
       var s = self.status;
-      var x = s.x, y = s.y, a = 'rotate(' + (s.angle + Math.PI / 2) + 'rad)', ta = 'rotate(' + (s.turretAngle) + 'rad)';
+      var x = s.x, y = s.y, a = 'rotate(' + s.bodyHeading + 'deg)', ga = 'rotate(' + (s.gunHeading - s.bodyHeading) + 'deg)';
 
       self.body.css('top', String(y) + 'px')
         .css('left', String(x) + 'px')
@@ -25,9 +25,9 @@ function Tank(field, status) {
         .css('transform', a);
 
       self.head
-        .css('-webkit-transform', ta)
-        .css('-moz-transform', ta)
-        .css('transform', ta);
+        .css('-webkit-transform', ga)
+        .css('-moz-transform', ga)
+        .css('transform', ga);
     }
   }
   

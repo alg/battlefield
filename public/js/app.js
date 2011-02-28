@@ -1,11 +1,10 @@
-
-
 function App(link) {
   var self = this;
 
   link.addConnectListener(function() {
     console.log('App connected');
-    link.send('join');
+    link.send('join', { name: 'Sample' });
+    link.send('start');
   })
 
   link.addMessageListener(function(json) {
@@ -19,6 +18,30 @@ function App(link) {
 
 function go() {
   link.send('start');
+}
+
+function move(distance) {
+  app.command({ move: distance });
+}
+
+function turnLeft(deg) {
+  app.command({ turn: -deg });
+}
+
+function turnRight(deg) {
+  app.command({ turn: deg });
+}
+
+function turnGunLeft(deg) {
+  app.command({ turnGun: -deg });
+}
+
+function turnGunRight(deg) {
+  app.command({ turnGun: deg });
+}
+
+function fire(power) {
+  app.command({ fire: power });
 }
 
 var app, link;
