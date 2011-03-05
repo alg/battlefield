@@ -24,10 +24,11 @@ The set of rules is approximate and will change:
 - Every tank has 100 points of energy in the beginning
 - When the energy is gone to zero, you can no longer fire
 - If you get a bullet with zero energy, you are dead
-- Every bullet fired costs 1 point of energy
-- Every bullet hit takes 2 points of energy
-- Every collision with the wall takes 1 point of energy
-- Every collision with another tank takes 1 point of energy from both
+- Every bullet fired costs 0.1 to 3 points of energy (you decide)
+- The more energy a bullet has, the faster it moves and the more energy it will take
+- Every bullet hit takes 4 times the energy plus 2 times the energy above 1
+- Every collision with the wall takes energy. The exact amount depends on velocity
+- Every collision with another tank takes 0.6 points of energy from both
 - The game lasts until the last one standing
 
 Installation and use
@@ -49,37 +50,16 @@ Once the server is running, connect to http://localhost:8000/ and you should see
 a battle field with your tank. The game is not running yet. To run the game,
 either open http://localhost:8000/start in another window or call "app.go()".
 
-From this moment, you can start issuing commands, for example:
+From this moment, you can start issuing commands:
 
-    app.command({ move: 1, turn: -1, turnTurret: 1, fire: 1 })
+    turnLeft(deg)
+    turnRight(deg)
+    turnGunLeft(deg)
+    turnGunRight(deg)
+    move(distance)
+    fire(power)
 
 You can have any combination of these depending on what you need.
-
-* _move_ makes the tank move (1) forward, (-1) backward or (0) stop
-* _turn_ makes the tank turn (1) counter-clockwise, (-1) clockwise or (0) stop turning
-* _turnTurret_ turns the turret
-* _fire_ with any argument makes it fire in the direction of the turret
-
-Note: at this stage I wasn't working on the client-side API. I expect it to be as
-friendly as the following soon:
-
-    function MyTank() {
-      this.tankStatuses = {};
-      this.bulletStatuses = {};
-  
-      this.addStatusListener(function(battlefieldStatus) {
-        this.tankStatuses = battlefieldStatus.tanks;
-        this.bulletStatuses = battlefieldStatus.bullets;
-    
-        // ...
-      });
-  
-      // to command your tank
-      this.command({ turn: 1, move: -1, turnTurret: -1, fire: true });
-    }
-
-    // Inherit everything from the BasicTank
-    MyTank.prototype = new BasicTank();
 
 Contributions
 -------------
@@ -88,10 +68,8 @@ Fork, branch, fix or implement, make a pull request. As simple as this.
 
 Here's what I plan:
 
-*Server side:*
+*Server side (Rails):*
 
-* Collision detection between tanks
-* Collision detection between tanks and walls
 * Game scoreboard
 * Accounts and Twitter OAuth
 * Uploading of the control scripts to accounts

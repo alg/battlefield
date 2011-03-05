@@ -9,7 +9,7 @@ function ManualControl(app, link) {
   var BTN_Q     = 81;
   var BTN_E     = 69;
   
-  var commands = { move: 0, turn: 0, fire: 0 }
+  var commands = { move: 0, turn: 0, turnGun: 0, fire: 0 }
 
   function moveAhead() { commands.move = 1; }
   function moveBack()  { commands.move = -1; }
@@ -59,6 +59,7 @@ function ManualControl(app, link) {
     
     if (!nowIdle || !wasIdle) {
       app.command({ move: move, turn: turn, fire: fire, turnGun: turnGun });
+      commands.fire = 0;
       wasIdle = nowIdle;
     }
   });
