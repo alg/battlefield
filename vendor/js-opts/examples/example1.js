@@ -27,7 +27,7 @@ var options = [
   { short       : 'v'
   , long        : 'version'
   , description : 'Show version and exit'
-  , callback    : function () { console.log('v1.0'); process.exit(1); }
+  , callback() { console.log('v1.0'); process.exit(1); }
   }
 ];
 

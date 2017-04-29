@@ -19,7 +19,7 @@ function ManualControl(app, link) {
   function stopTurn()  { commands.turn = 0; }
   function fire()      { commands.fire = 1; }
 
-  $(document).keydown(function(event) {
+  $(document).keydown(event => {
     switch(event.which) {
       case BTN_UP:    moveAhead(); break;
       case BTN_DOWN:  moveBack(); break;
@@ -29,7 +29,7 @@ function ManualControl(app, link) {
       case BTN_Q:     commands.turnGun = -1; break;
       case BTN_E:     commands.turnGun = 1; break;
     }
-  }).keyup(function(event){
+  }).keyup(event => {
     switch(event.which){
       case BTN_UP:    
       case BTN_DOWN:  
@@ -46,25 +46,25 @@ function ManualControl(app, link) {
         commands.turnGun = 0;
         break;
     }
-  }).click(function() { fire() });
+  }).click(() => { fire() });
   
   var wasIdle = nowIdle = false;
-  link.addMessageListener(function(json) {
-    var move = commands.move * 8,
-        turn = commands.turn * 10,
-        fire = commands.fire,
-        turnGun = commands.turnGun * 10;
-    
+  link.addMessageListener(json => {
+    var move = commands.move * 8;
+    var turn = commands.turn * 10;
+    var fire = commands.fire;
+    var turnGun = commands.turnGun * 10;
+
     nowIdle = (move || turn || fire || turnGun) == 0;
-    
+
     if (!nowIdle || !wasIdle) {
-      app.command({ move: move, turn: turn, fire: fire, turnGun: turnGun });
+      app.command({ move, turn, fire, turnGun });
       commands.fire = 0;
       wasIdle = nowIdle;
     }
   });
 }
 
-$(function() {
+$(() => {
   new ManualControl(app, link);
 });

@@ -1,5 +1,5 @@
-var util = require("./_util")
-  , events = require("events")
+var util = require("./_util");
+var events = require("events");
 
 EventEmitter = exports.EventEmitter = function(){
   events.EventEmitter.call(this);
@@ -13,7 +13,7 @@ EventEmitter.prototype.emit = function(type) {
     && this._bubbleTarget && this._bubbleTarget[type]
   ) {
     // util.error("\033[31mEvent: "+type+", source: "+this.constructor.name+", target: "+this._bubbleTarget[type].constructor.name+"\033[39m");
-    this._bubbleTarget[type].emit.apply(this._bubbleTarget[type], arguments);
+    this._bubbleTarget[type].emit(...arguments);
   } else {
     // util.error("\033[31mEvent: "+type+", source: "+this.constructor.name+"\033[39m");
     events.EventEmitter.prototype.emit.apply(this, arguments);

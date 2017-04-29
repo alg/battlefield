@@ -4,7 +4,7 @@ function Tank(field, status) {
   self.field = $(field);
   self.body = null;
   
-  this.setStatus = function(status) {
+  this.setStatus = status => {
     self.status = status;
     update();
   }
@@ -16,7 +16,10 @@ function Tank(field, status) {
       self.field.append(self.body);
     } else {
       var s = self.status;
-      var x = s.x, y = s.y, a = 'rotate(' + s.bodyHeading + 'deg)', ga = 'rotate(' + (s.gunHeading - s.bodyHeading) + 'deg)';
+      var x = s.x;
+      var y = s.y;
+      var a = 'rotate(' + s.bodyHeading + 'deg)';
+      var ga = 'rotate(' + (s.gunHeading - s.bodyHeading) + 'deg)';
 
       self.body.css('top', String(y) + 'px')
         .css('left', String(x) + 'px')
@@ -41,18 +44,19 @@ function Bullet(field) {
   self.field = $(field);
   self.body = null;
   
-  this.setStatus = function(status) {
+  this.setStatus = status => {
     self.status = status;
     update();
   }
 
-  this.remove = function() {
+  this.remove = () => {
     self.body.remove();
   }
 
   function update() {
     var s = self.status;
-    var x = s.x, y = s.y;
+    var x = s.x;
+    var y = s.y;
 
     self.body.css('top', String(y) + 'px')
       .css('left', String(x) + 'px');
@@ -69,8 +73,8 @@ function Battlefield(id, link) {
   self.tanks = {};
   self.bullets = {};
 
-  link.addConnectListener(function() { console.log('Battlefield connected'); });
-  link.addMessageListener(function(json) {
+  link.addConnectListener(() => { console.log('Battlefield connected'); });
+  link.addMessageListener(json => {
     if (json.type == 'init') {
       self.bf.width(json.data.battlefield.width).height(json.data.battlefield.height);
     } else if (json.type == 'status') {

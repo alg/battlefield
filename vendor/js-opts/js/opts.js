@@ -34,12 +34,13 @@ of the authors and should not be interpreted as representing official policies,
 either expressed or implied, of Joey Mazzarelli.
 ***************************************************************************/
 
-var puts        = console.log
-  , values      = {}
-  , args        = {}
-  , argv        = []
-  , errors      = []
-  , descriptors = {opts:[], args:[]};
+var puts        = console.log;
+
+var values      = {};
+var args        = {};
+var argv        = [];
+var errors      = [];
+var descriptors = {opts:[], args:[]};
 
 /**
  * Get some version info out of it
@@ -53,7 +54,7 @@ exports.version = '1.2.1';
  * Additionally, it takes a namespace as an argument, useful for
  * building options for a library in addition to the main app.
  */
-exports.add = function (options, namespace) {
+exports.add = (options, namespace) => {
   for (var i=0; i<options.length; i++) {
     options[i].namespace = namespace;
     descriptors.opts.push(options[i]);
@@ -96,7 +97,7 @@ exports.add = function (options, namespace) {
  *     callback : function (value) { ... },
  *   }
  */
-exports.parse = function (options, params, help) {
+exports.parse = (options, params, help) => {
 
   if (params === true) {
     help = true;
@@ -119,7 +120,7 @@ exports.parse = function (options, params, help) {
   }
   options = descriptors.opts;
 
-  var checkDup = function (opt, type) {
+  var checkDup = (opt, type) => {
     var prefix = (type == 'short')? '-': '--';
     var name = opt[type];
     if (!opts[prefix + name]) {
@@ -213,16 +214,12 @@ exports.parse = function (options, params, help) {
  * Get the value of an option. Can be the short or long option
  * @return string
  */
-exports.get = function (opt) {
-  return values[opt] || values['-' + opt] || values['--' + opt];
-};
+exports.get = opt => values[opt] || values['-' + opt] || values['--' + opt];
 
 /**
  * Get unknown args. Could have special meaning to client
  */
-exports.args = function () {
-  return argv;
-};
+exports.args = () => argv;
 
 /**
  * Get an arg by name.
@@ -230,22 +227,20 @@ exports.args = function () {
  * @param string name Name of arg
  * @return string Value of arg
  */
-exports.arg = function (name) {
-  //puts(require('sys').inspect(arguments));
-  return args[name];
-};
+exports.arg = name => //puts(require('sys').inspect(arguments));
+args[name];
 
 /**
  * Print the help message and exit
  */
-exports.help = function () {
+exports.help = () => {
   puts(helpString());
   process.exit(0);
 };
 
 
 // Create the help string
-var helpString = function () {
+var helpString = () => {
   var str = 'Usage: ' + process.argv[0] + ' ' + process.argv[1];
   if (descriptors.opts.length) str += ' [options]';
   if (descriptors.args.length) {
