@@ -8,12 +8,12 @@ var options = [{
   long:         'port',
   description:  'Server port number',
   value:        8000,
-  callback:     function(v) { portNumber = parseInt(v) }
+  callback(v) { portNumber = parseInt(v) }
 }];
 
 opts.parse(options, true);
 
-process.addListener("uncaughtException", function(err, stack) {
+process.addListener("uncaughtException", (err, stack) => {
   console.log('----------------------');
   console.log('Exception: ' + err);
   console.log(err.stack);

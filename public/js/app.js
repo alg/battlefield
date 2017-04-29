@@ -1,17 +1,17 @@
 function App(link) {
   var self = this;
 
-  link.addConnectListener(function() {
+  link.addConnectListener(() => {
     console.log('App connected');
     link.send('join', { name: 'Sample' });
     link.send('start');
   })
 
-  link.addMessageListener(function(json) {
+  link.addMessageListener(json => {
     //console.log(json.type, json.data);
   })
     
-  this.command = function(data) {
+  this.command = data => {
     link.send(null, data);
   }
 }
@@ -44,8 +44,9 @@ function fire(power) {
   app.command({ fire: power });
 }
 
-var app, link;
-$(function() {
+var app;
+var link;
+$(() => {
   link = new Link();
   app  = new App(link);
   bf   = new Battlefield('#battlefield', link);

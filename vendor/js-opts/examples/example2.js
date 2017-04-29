@@ -9,14 +9,15 @@
  * inconsistent. Choose the style that suits you best.
  */
 
-var opts = require('./../js/opts')
-  , host = 'localhost'; // default host value
+var opts = require('./../js/opts'); // default host value
+
+var host = 'localhost';
 
 var options = [
   { short       : 'v'
   , long        : 'version'
   , description : 'Show version and exit'
-  , callback    : function () { console.log('v1.0'); process.exit(1); }
+  , callback() { console.log('v1.0'); process.exit(1); }
   },
   { short       : 'l'
   , long        : 'list'
@@ -37,7 +38,7 @@ var options = [
   , long        : 'host'
   , description : 'The hostname to connect to'
   , value       : true
-  , callback    : function (value) { host = value; } // override host value
+  , callback(value) { host = value; } // override host value
   },
   { short       : 'p'
   , long        : 'port'
@@ -48,13 +49,16 @@ var options = [
 
 opts.parse(options, true);
 
-var port  = opts.get('port') || 8000 // default port value
-  , debug = opts.get('d') || 'info'  // default debug value
-  , file  = opts.get('f')
-  , list  = opts.get('list');
+var // default port value
+port  = opts.get('port') || 8000;
 
-var arg1 = opts.args()[0]
-  , arg2 = opts.args()[1];
+var // default debug value
+debug = opts.get('d') || 'info';
+
+var file  = opts.get('f');
+var list  = opts.get('list');
+var arg1 = opts.args()[0];
+var arg2 = opts.args()[1];
 
 
 if (list) console.log('List arg was set');

@@ -4,27 +4,27 @@ function Link() {
   var messageListeners = [];
   var connectListeners = [];
   
-  this.addConnectListener = function(l) {
+  this.addConnectListener = l => {
     connectListeners.push(l);
   }
   
-  this.addMessageListener = function(l) {
+  this.addMessageListener = l => {
     messageListeners.push(l);
   }
   
-  this.connect = function() {
+  this.connect = () => {
     socket = new WebSocket('ws://localhost:8000/');
-    socket.onopen = function() {
+    socket.onopen = () => {
       notify(connectListeners);
 
-      socket.onmessage = function(message) {
+      socket.onmessage = message => {
         notify(messageListeners, JSON.parse(message.data));
       }
     }
   }
   
-  this.send = function(type, data) {
-    socket.send(JSON.stringify(type ? { type: type, data: data } : data));
+  this.send = (type, data) => {
+    socket.send(JSON.stringify(type ? { type, data } : data));
   }
   
   function notify(listeners) {

@@ -31,11 +31,11 @@ dev_server = {
 
         this.process = child_process.spawn(process.ARGV[0], ['server.js']);
 
-        this.process.stdout.addListener('data', function (data) {
+        this.process.stdout.addListener('data', data => {
             process.stdout.write(data);
         });
 
-        this.process.stderr.addListener('data', function (data) {
+        this.process.stderr.addListener('data', data => {
             sys.print(data);
         });
 
@@ -54,12 +54,12 @@ dev_server = {
     "watchFiles": function() {
         var self = this;
 
-        child_process.exec('find . | grep "\.js$"', function(error, stdout, stderr) {
+        child_process.exec('find . | grep "\.js$"', (error, stdout, stderr) => {
             var files = stdout.trim().split("\n");
 
-            files.forEach(function(file) {
+            files.forEach(file => {
                 self.files.push(file);
-                fs.watchFile(file, {interval : 500}, function(curr, prev) {
+                fs.watchFile(file, {interval : 500}, (curr, prev) => {
                     if (curr.mtime.valueOf() != prev.mtime.valueOf() || curr.ctime.valueOf() != prev.ctime.valueOf()) {
                         sys.debug('DEVSERVER: Restarting because of changed file at ' + file);
                         dev_server.restart();
@@ -70,7 +70,7 @@ dev_server = {
    },
 
     "unwatchFiles": function() {
-        this.files.forEach(function(file) {
+        this.files.forEach(file => {
             fs.unwatchFile(file);
         });
         this.files = [];
